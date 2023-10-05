@@ -2,6 +2,7 @@ package data_access;
 
 import entity.User;
 import entity.UserFactory;
+import interface_adapter.UserSignupDataAccessInterface;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -34,8 +35,10 @@ public class FileUserDataAccessObject implements UserSignupDataAccessInterface {
             try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
                 String header = reader.readLine();
 
-                // TODO clean this up by creating a new Exception subclass and handling it in the UI.
-                assert header.equals("username,password,creation_time");
+                if (!header.equals("username,password,creation_time")) {
+                    throw new RuntimeException("Invalid header in CSV file.");
+                }
+//                assert header.equals("username,password,creation_time");
 
                 String row;
                 while ((row = reader.readLine()) != null) {
